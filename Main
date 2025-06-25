@@ -1,12 +1,8 @@
+# Diccionario para almacenar los usuarios
 usuarios = {}
 
-def mostrar_menu():
-    print("\nMENU PRINCIPAL")
-    print("1.- Ingresar usuario.")
-    print("2.- Buscar usuario.")
-    print("3.- Eliminar usuario.")
-    print("4.- Salir.")
-    return input("Ingrese opción: ")
+# Validación de contraseña
+import re
 
 def validar_contraseña(contraseña):
     if len(contraseña) < 8:
@@ -20,55 +16,66 @@ def validar_contraseña(contraseña):
 def ingresar_usuario():
     while True:
         nombre = input("Ingrese nombre de usuario: ")
-        if nombre in usuarios:
-            print("Usuario ya existe. Intente otro.")
+        if nombre.lower() in (n.lower() for n in usuarios):
+            print("Usuario ya existe. Intento otro.")
         else:
             break
 
     while True:
-        sexo = input("Ingrese sexo (M/F): ").upper()
-        if sexo in ['M', 'F']:
-            break
-        else:
+        sexo = input("Ingrese sexo: ")
+        if sexo.upper() not in ["M", "F"]:
             print("Debe ingresar M o F solamente. Intente de nuevo.")
+        else:
+            break
 
     while True:
-        contraseña = input("Ingrese contraseña: ")
-        if validar_contraseña(contraseña):
-            print("Contraseña válida.")
-            break
+        contrasena = input("Ingrese contraseña: ")
+        if not validar_contrasena(contrasena):
+            print("Contraseña no valida. Intente otra.")
         else:
-            print("Contraseña no válida. Intente otra.")
+            print("Contraseña valida.")
+            break
 
-    usuarios[nombre] = {'sexo': sexo, 'contraseña': contraseña}
-    print("Usuario ingresado con éxito!!")
+    usuarios[nombre] = {"sexo": sexo.upper(), "contrasena": contrasena}
+    print("Usuario ingresado con exito!!")
 
 def buscar_usuario():
-    nombre = input("Ingrese usuario a buscar: ")
-    if nombre in usuarios:
-        datos = usuarios[nombre]
-        print(f"El sexo del usuario es: {datos['sexo']} y la contraseña es: {datos['contraseña']}")
-    else:
-        print("El usuario no se encuentra.")
+    nombre = input("Ingrese usuario a buscar: ").strip().lower()
+    for key in usuarios:
+        if key.lower() == nombre:
+            datos = usuarios[key]
+            print(f"El sexo del usuario es: {datos['sexo']} y la contraseña es: {datos['contrasena']}")
+            return
+    print("El usuario no se encuentra.")
 
 def eliminar_usuario():
-    nombre = input("Ingrese usuario a eliminar: ")
-    if nombre in usuarios:
-        del usuarios[nombre]
-        print("Usuario eliminado con éxito!")
-    else:
-        print("No se pudo eliminar usuario!")
+    nombre = input("Ingrese usuario a buscar: ").strip().lower()
+    for key in list(usuarios.keys()):
+        if key.lower() == nombre:
+            del usuarios[key]
+            print("Usuario eliminado con éxito!")
+            return
+    print("No se pudo eliminar usuario!")
+
+def mostrar_menu():
+    print("\nMENU PRINCIPAL")
+    print("1.- Ingresar usuario.")
+    print("2.- Buscar usuario.")
+    print("3.- Eliminar usuario.")
+    print("4.- Salir.")
+    return input("Ingrese opción: ")
 
 def main():
     while True:
         opcion = mostrar_menu()
-        if opcion == '1':
+
+        if opcion == "1":
             ingresar_usuario()
-        elif opcion == '2':
+        elif opcion == "2":
             buscar_usuario()
-        elif opcion == '3':
+        elif opcion == "3":
             eliminar_usuario()
-        elif opcion == '4':
+        elif opcion == "4":
             print("Programa terminado...")
             break
         else:
